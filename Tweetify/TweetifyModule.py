@@ -1,7 +1,7 @@
-# TweetifyModule.py
+﻿# TweetifyModule.py
 # Marco Garcia
 
-import TwythonStreamModule
+import TweetifyStreamingModule
 from twython import Twython
 
 CONSUMER_KEY = 'OnGuo3ldYW7IB0jDInYG4lOCq'
