@@ -31,6 +31,9 @@
     <Compile Include="TweetifyModule.py" />
     <Compile Include="TweetifyStreamingModule.py" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="TweetifyConfig.ini" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <PtvsTargetsFile>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets</PtvsTargetsFile>

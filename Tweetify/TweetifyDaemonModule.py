@@ -9,7 +9,7 @@ import LcdWriter
 import ConsoleWriter
 import imp
 
-# check to see if we can write to lcd
+# check to see if we lcd libraries are installed
 try:
 	imp.find_module('smbus')
 	found = True
@@ -41,30 +41,30 @@ class TweetifyDaemonModule():
 				
 # Connection functions
 	def check_now_playing(self):
-			while 1 :
-					if self.send_message == True:
-							self.send_message = False
-							time.sleep(self.update_message_sleep)
-					else :
-							time.sleep(1)
+		while 1 :
+				if self.send_message == True:
+						self.send_message = False
+						time.sleep(self.update_message_sleep)
+				else :
+						time.sleep(1)
 
-					threadLock.acquire()
-					if self.now_playing_changed():
-							print "now playing changed"
-							now_playing = self.client.currentsong()
-							self.artist = now_playing['artist']
-							self.album = now_playing['album']
-							self.song = now_playing['title']
-							self.update_now_playing()
-					threadLock.release()
+				threadLock.acquire()
+				if self.now_playing_changed():
+						print "now playing changed"
+						now_playing = self.client.currentsong()
+						self.artist = now_playing['artist']
+						self.album = now_playing['album']
+						self.song = now_playing['title']
+						self.update_now_playing()
+				threadLock.release()
 
 	def start_mpd(self):
 		st = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
 		print "Starting Tweetify!"
-		self.write_message("Hi I'm Tweetify!", "I can play music for you.", "Tweet me at @TweetifyBox", "")
+		
+		self.write_message("Hi I'm Tweetify!", "I can play music for you.", "Tweet me at @{0}".format(TweetifyModule.TwitterAccount))
 		self.check_mpd_connection()
 		self.client.clear()
-		self.play_song("jumpman")
 
 		t = threading.Thread(target=self.check_now_playing, args=())
 		t.daemon = True
@@ -74,17 +74,17 @@ class TweetifyDaemonModule():
 		TweetifyModule.start_twitter_listener(self)
 
 	def check_mpd_connection(self):
-			try :
-					self.client.ping()
-			except :
-					try :
-							# network timeout in seconds (floats allowed), default: None
-							self.client.timeout = 30
-							# connect to localhost:6600
-							self.client.connect("localhost", 6600)
-							print "Connecting to MPD!"
-					except:
-							print "Connection failed!"
+		try :
+				self.client.ping()
+		except :
+				try :
+						# network timeout in seconds (floats allowed), default: None
+						self.client.timeout = 30
+						# connect to localhost:6600
+						self.client.connect("localhost", 6600)
+						print "Connecting to MPD!"
+				except:
+						print "Connection failed!"
 
 	def close_mpd(self):
 		# send the close command
@@ -105,42 +105,42 @@ class TweetifyDaemonModule():
 			self.mpd_commands(self.hashtag)
 
 	def now_playing_changed(self):
-			now_playing = self.client.currentsong()
+		now_playing = self.client.currentsong()
 				
-			if 'artist' in now_playing :
-					if self.artist != now_playing['artist'] :
-							return True
+		if 'artist' in now_playing :
+				if self.artist != now_playing['artist'] :
+						return True
 
-			if 'album' in now_playing :
-					if self.album != now_playing['album'] :
-							return True
+		if 'album' in now_playing :
+				if self.album != now_playing['album'] :
+						return True
 
-			if 'title' in now_playing :
-					if self.song != now_playing['title'] :
-							return True
-			return False
+		if 'title' in now_playing :
+				if self.song != now_playing['title'] :
+						return True
+		return False
 
-	def write_message(self, row1, row2, row3, row4) :
-			self.send_message = True
-			output.write(row1,row2,row3,row4)
+	def write_message(self, row1 = "", row2 = "", row3 = "", row4 = "") :
+		self.send_message = True
+		output.write(row1,row2,row3,row4)
 		
 	def update_now_playing(self) :
-			now_playing = self.client.currentsong()
-			output.write("Now Playing...",self.song,self.artist,self.album)
+		now_playing = self.client.currentsong()
+		output.write("Now Playing...",self.song,self.artist,self.album)
 		
 # Controlling playback
 	def search_track(self, searchtext):
-			self.write_message("Got tweet from ", self.sender, "Searching for track ", searchtext)
-			results = self.spotipy.search(q='track:' + searchtext, limit=1, offset=0, type='track')
+		self.write_message("Got tweet from ", self.sender, "Searching for track ", searchtext)
+		results = self.spotipy.search(q='track:' + searchtext, limit=1, offset=0, type='track')
 
-			items = results['tracks']['items']
+		items = results['tracks']['items']
 
-			if len(items) > 0:
-				track = items[0]
-				print "Adding track ", track['name']
-				self.client.add(track['uri'])
-			else :
-					print "No tracks for ", searchtext, " found"
+		if len(items) > 0:
+			track = items[0]
+			print "Adding track ", track['name']
+			self.client.add(track['uri'])
+		else :
+				print "No tracks for ", searchtext, " found"
 				
 	def mpd_commands(self, command):
 		print "getting command: ", command

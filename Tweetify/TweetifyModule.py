@@ -2,21 +2,25 @@
 # Marco Garcia
 
 import TweetifyStreamingModule
+import ConfigParser
 from twython import Twython
 
-CONSUMER_KEY = 'OnGuo3ldYW7IB0jDInYG4lOCq'
-CONSUMER_SECRET = 'fEId8XZxt35go1bzmeAmfhi8gcGF14J0mlgXGH4tOzVbGXFl1c'
-ACCESS_KEY = '701452267841433600-sceZ1oM8LHK8MIkMVsjMLjTbEunmhFV'
-ACCESS_SECRET = 'MIOaDJPslYOFYe6VA07r3j10IiPCpsFyEKKJ5t6kbkoUz'
-pi_twitter_account = "PidoraBox"
+config = ConfigParser.ConfigParser()
+config.read('TweetifyConfig.ini')
 
-twitter = Twython(CONSUMER_KEY,CONSUMER_SECRET,ACCESS_KEY,ACCESS_SECRET)
+ConsumerKey = config.get('Twitter','ConsumerKey')
+ConsumerSecret = config.get('Twitter','ConsumerSecret')
+AccessKey = config.get('Twitter','AccessKey')
+AccessSecret = config.get('Twitter','AccessSecret')
+TwitterAccount = config.get('Twitter','TwitterAccount')
+
+twitter = Twython(ConsumerKey,ConsumerSecret,AccessKey,AccessSecret)
 
 def start_twitter_listener(tweetifydaemonmodule):
-	print "Waiting for tweets to ", pi_twitter_account, "..."
+	print "Waiting for tweets to ", TwitterAccount, "..."
 
-	stream = TweetifyStreamingModule.TweetifyStreamingParser(CONSUMER_KEY,CONSUMER_SECRET,ACCESS_KEY,ACCESS_SECRET, tweetifydaemonmodule) 
-	stream.statuses.filter(track=pi_twitter_account)
+	stream = TweetifyStreamingModule.TweetifyStreamingParser(ConsumerKey,ConsumerSecret,AccessKey,AccessSecret, tweetifydaemonmodule) 
+	stream.statuses.filter(track=TwitterAccount)
 
 def send_tweet(text):
 	print "sending tweet: ", text
