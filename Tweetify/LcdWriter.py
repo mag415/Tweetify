@@ -41,25 +41,6 @@ if found:
 	class LcdWriter():
 		def __init__(self):
 		# Initialise display
-		self.lcd_clear()            # 000001 Clear display
-		time.sleep(E_DELAY)
-
-	  def lcd_clear(self):
-		self.lcd_byte(0x01,LCD_CMD)
-    
-	  def lcd_byte(self, bits, mode):
-		# Send byte to data pins
-		# bits = the data
-		# mode = 1 for data
-		# 0 for command
-
-		bits_high = mode | (bits & 0xF0) | LCD_BACKLIGHT
-		bits_low = mode | ((bits<<4) & 0xF0) | LCD_BACKLIGHT
-
-		# High bits
-		bus.write_byte(I2C_ADDR, bits_high)
-		self.lcd_toggle_enable(bits_high)
-
 			self.lcd_byte(0x33,LCD_CMD) # 110011 Initialise
 			self.lcd_byte(0x32,LCD_CMD) # 110010 Initialise
 			self.lcd_byte(0x06,LCD_CMD) # 000110 Cursor move direction
