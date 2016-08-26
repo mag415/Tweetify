@@ -9,7 +9,7 @@ class TweetifyStreamingParser(TwythonStreamer):
 
 	def __init__(self, CONSUMER_KEY,CONSUMER_SECRET,ACCESS_KEY,ACCESS_SECRET, TweetifyDaemonModule):
 		self.tweetifydaemonmodule = TweetifyDaemonModule
-		super(TwythonStreamParser, self).__init__(CONSUMER_KEY,CONSUMER_SECRET,ACCESS_KEY,ACCESS_SECRET)
+		super(TweetifyStreamingParser, self).__init__(CONSUMER_KEY,CONSUMER_SECRET,ACCESS_KEY,ACCESS_SECRET)
 
 	def on_success(self, data):
 		print data

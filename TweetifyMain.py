@@ -1,10 +1,9 @@
 # TweetifyMain.py
 # Marco Garcia
 
-import TwythonStreamModule
+import TweetifyStreamingModule
 import TweetifyDaemonModule
+import LcdWriter
 
 tweetifydaemonmodule = TweetifyDaemonModule.TweetifyDaemonModule()
 tweetifydaemonmodule.start_mpd()
-
-#tweetifydaemonmodule.close_mpd

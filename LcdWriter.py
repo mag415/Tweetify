@@ -28,7 +28,7 @@ E_DELAY = 0.0005
 #Open I2C interface
 bus = smbus.SMBus(1) # Rev 2 Pi uses 1
 
-class Lcd_Writer():
+class LcdWriter():
   def __init__(self):
     # Initialise display
     self.lcd_byte(0x33,LCD_CMD) # 110011 Initialise
